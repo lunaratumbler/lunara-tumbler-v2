@@ -1,0 +1,5 @@
+[build]
+  command = "npm run build"
+
+# Netlify detects Next.js and provisions its maintained OpenNext adapter automatically.
+# Do not add a pinned adapter/plugin unless a verified deployment requirement needs it.
