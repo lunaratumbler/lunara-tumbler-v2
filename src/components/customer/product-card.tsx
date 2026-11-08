@@ -18,12 +18,6 @@ export function ProductCard({ product, storeName = "Lunara Tumbler" }: { product
             height={720}
             sizes="(max-width: 640px) 84vw, (max-width: 1024px) 42vw, 24vw"
           /> : <span className="product-placeholder" aria-hidden="true">L</span>}
-          {(product.isNew || product.isBestSeller) && (
-            <div className="product-badges">
-              {product.isNew && <span className="product-badge badge-new">Baru</span>}
-              {product.isBestSeller && <span className="product-badge badge-bestseller">Terlaris</span>}
-            </div>
-          )}
         </div>
       </Link>
       <div className="product-card-copy">

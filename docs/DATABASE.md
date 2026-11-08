@@ -112,9 +112,12 @@ Ini rancangan awal untuk didiskusikan dan divalidasi sebelum migration dibuat. C
 10. Tentukan kebijakan delete/archive agar histori pesanan tidak rusak ketika produk dihapus.
 11. Foto publik dapat memakai bucket public jika memang hanya berisi foto katalog. Jangan simpan dokumen privat admin di bucket publik.
 
-## Hal yang harus diputuskan sebelum migration
-- Apakah admin tunggal atau multi-user?
-- Apakah biaya tambahan/operasional dicatat?
-- Apakah histori status wajib sejak versi pertama?
-- Apakah spesifikasi produk disimpan sebagai JSON atau tabel terstruktur?
-- Apakah produk dihapus permanen atau dinonaktifkan (disarankan nonaktifkan agar histori terjaga)?
+## Keputusan owner (2026-11-07)
+- Satu akun admin aktif digunakan saat ini; relasi `profiles` tidak mengunci jumlah akun sehingga admin tambahan dapat ditambahkan nanti. Tidak ada role staf bertingkat.
+- Biaya operasional tambahan tidak dihitung dalam v1. Laba kotor adalah total penjualan dikurangi snapshot HPP saja.
+- Histori perubahan status pesanan disimpan.
+- Spesifikasi disimpan sebagai JSONB; kapasitas, material, dan dimensi divalidasi melalui formulir admin.
+- Produk dinonaktifkan, tidak dihapus permanen.
+- Nomor WhatsApp, template pesan, dan biaya personalisasi dikelola melalui Settings. Nomor kontak tidak dicetak pada teks halaman customer.
+
+Migration lokal ada pada `../supabase/migrations/202611070001_milestone3.sql`. Migration tersebut belum diterapkan pada project Supabase.

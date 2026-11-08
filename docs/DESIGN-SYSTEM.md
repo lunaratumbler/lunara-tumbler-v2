@@ -1,61 +1,46 @@
 # Design System — Lunara Tumbler
 
 ## Arah visual
-Minimalis, profesional, elegan, feminin, dan terasa seperti brand lifestyle. Hindari tampilan template e-commerce generik yang terlalu ramai.
+Minimalis, profesional, elegan, feminin, dan terasa seperti brand lifestyle. Mockup `public/mockup/Kolase E-commerce Tumbler Lunara Pastel.png` menjadi referensi visual utama. Tahap inisialisasi hanya menyiapkan fondasi visual, belum membangun halaman customer lengkap.
 
-## Palet awal
-Warna berikut adalah arah visual, bukan token final yang tidak boleh disesuaikan:
-- Ivory/off-white: latar utama.
-- Beige/champagne: permukaan sekunder dan aksen lembut.
-- Dusty rose/soft pink: aksen brand.
-- Sage: aksen pendamping.
-- Charcoal/dark brown: teks utama.
+## Palet token awal
+Token ini menerjemahkan arah mockup dan dapat disempurnakan setelah review desain:
 
-Tetapkan nilai HEX final dalam CSS variables setelah mockup disetujui.
+| Token | HEX | Penggunaan |
+|---|---|---|
+| Ivory | `#FBF7F3` | Latar utama |
+| Ivory deep | `#F5ECE7` | Latar sekunder |
+| Dusty rose | `#C9827E` | Aksen brand |
+| Rose deep | `#9B625F` | Aksen kontras dan teks |
+| Beige | `#EAD8CC` | Permukaan sekunder |
+| Champagne | `#D8BDA8` | Aksen lembut |
+| Sage | `#AAB5A1` | Aksen pendamping |
+| Charcoal | `#342A28` | Teks utama |
+| Muted | `#796B67` | Teks sekunder |
+
+Token diimplementasikan sebagai CSS variables pada `src/app/globals.css` dan diekspos ke Tailwind v4 melalui `@theme inline`.
 
 ## Tipografi
-- Gunakan tipografi yang bersih dan mudah dibaca.
-- Heading dapat memakai serif elegan jika tetap terbaca.
-- Body dan kontrol UI menggunakan sans-serif yang jelas.
-- Batasi jumlah keluarga font.
+- Heading: serif elegan berbasis Georgia/Times New Roman sebagai fallback sistem.
+- Isi dan kontrol: sans-serif berbasis Arial/Helvetica.
+- Maksimal dua keluarga font; font eksternal belum ditambahkan.
 
-## Layout
-- Banyak ruang kosong dan hierarki visual yang jelas.
-- Hero/banner kecil hingga sedang, bukan memenuhi hampir seluruh layar.
-- Grid produk konsisten.
-- Kartu produk sederhana, gambar menjadi fokus.
-- Gunakan radius, border, dan shadow secara halus dan konsisten.
+## Layout dan responsif
+- Gunakan ruang kosong, hierarki jelas, dan hero kecil sampai sedang.
+- Grid produk konsisten; gambar menjadi fokus kartu.
+- Mobile-first; titik acuan CSS: 640px (mobile lebar), 768px (tablet), dan 1024px (desktop).
+- Variabel spacing halaman memakai `clamp()`; hindari horizontal overflow.
 
-## Komponen penting
-- Header dan navigasi.
-- Hero/banner.
-- Product card.
-- Badge New/Best Seller.
-- Circular color swatch.
-- Product gallery.
-- Quantity stepper.
-- Personalization input.
-- Cart item dan order summary.
-- Tombol WhatsApp.
-- Admin sidebar, tabel, form, dialog konfirmasi, toast, dan status badge.
+## Bentuk dan elevation
+- Radius kartu awal: 20px; kontrol pill: 999px.
+- Shadow lembut dengan opacity rendah, tanpa efek berat.
+- Gunakan border tipis bernuansa rose/beige untuk memisahkan permukaan.
 
-## Responsif
-- Prioritaskan pengalaman mobile.
-- Navigasi, swatch, tombol, dan input harus mudah disentuh.
-- Grid menyesuaikan lebar layar.
-- Hindari horizontal overflow.
+## Komponen acuan
+Header dan navigasi, hero, kartu produk, badge, swatch warna, galeri, stepper kuantitas, input personalisasi, item keranjang, ringkasan pesanan, tombol WhatsApp, sidebar admin, form, dialog, toast, dan badge status.
 
 ## UX dan aksesibilitas
-- Semua input memiliki label.
-- Status terpilih pada swatch harus terlihat selain hanya perubahan warna.
-- Tombol memiliki state hover, focus, disabled, dan loading.
-- Gambar memiliki alt text.
-- Pesan error menjelaskan cara memperbaiki input.
-- Konfirmasi sebelum aksi hapus yang berdampak.
+Setiap input perlu label, fokus keyboard harus terlihat, swatch harus memiliki penanda terpilih selain warna, gambar memiliki alt text, serta state hover/focus/disabled/loading/error/empty harus jelas. Ukuran kontrol sentuh harus nyaman.
 
-## Konsistensi
-Simpan token warna, font, spacing, radius, shadow, dan ukuran komponen sebagai design tokens. Jangan menyebarkan nilai acak di banyak komponen.
-
-
-## Panel admin responsif
-Panel admin wajib mendukung smartphone, tablet, dan desktop dengan seluruh fungsi tetap tersedia. Pada smartphone, sidebar berubah menjadi drawer/hamburger; form menjadi satu kolom; tabel menggunakan scroll di kontainernya atau kartu; dialog menyesuaikan viewport; dan kontrol memiliki area sentuh yang nyaman. Tidak boleh ada aksi penting yang hanya muncul saat hover. Ikuti kriteria rinci pada `RESPONSIVE-ADMIN.md`.
+## Ketentuan tahap berikutnya
+Jangan menganggap token ini sebagai persetujuan desain final. Pertahankan bahasa visual mockup dan validasi perubahan desain pada review milestone UI.

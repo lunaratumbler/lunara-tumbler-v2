@@ -32,7 +32,7 @@ export async function saveProduct(_previous: ProductFormState, form: FormData): 
     return value;
   };
   const sellingPrice = parsePrice("selling_price", "Harga jual");
-  const costPrice = parsePrice("cost_price", "HPP");
+  const costPrice = parsePrice("cost_price", "Harga modal");
   const colorText = String(form.get("colors") ?? "").trim();
   const colors = colorText ? colorText.split("\n").map((line) => line.trim()).filter(Boolean) : [];
   if (colors.some((colorName) => colorName.length > 60)) errors.colors = "Nama warna maksimal 60 karakter.";
@@ -45,17 +45,13 @@ export async function saveProduct(_previous: ProductFormState, form: FormData): 
     const result = await supabase.from("categories").upsert({ name: categoryName, slug: categorySlug, is_active: true }, { onConflict: "slug" }).select("id").single();
     if (result.error) throw new Error(result.error.message); categoryId = result.data.id;
   }
-  const specifications = { capacity: String(form.get("capacity") ?? ""), material: String(form.get("material") ?? ""), dimensions: String(form.get("dimensions") ?? "") };
-  const values = { name, slug, category_id: categoryId, description: String(form.get("description") ?? ""), selling_price: sellingPrice, cost_price: costPrice, specifications, is_new: form.has("is_new"), is_best_seller: form.has("is_best_seller"), is_featured: form.has("is_featured"), featured_order: integer(form.get("featured_order")) ?? 0, is_active: form.has("is_active") };
+  const values = { name, slug, category_id: categoryId, description: String(form.get("description") ?? "").trim(), selling_price: sellingPrice, cost_price: costPrice };
   const saved = id ? await supabase.from("products").update(values).eq("id", id).select("id").single() : await supabase.from("products").insert(values).select("id").single();
   if (saved.error) {
     if (saved.error.code === "23505") return { errors: { slug: "Slug ini sudah dipakai produk lain. Ubah nama produk agar slug berbeda." } };
     return { errors: {}, formError: `Produk gagal disimpan: ${saved.error.message}` };
   }
   const productId = saved.data.id;
-  await supabase.from("product_related_products").delete().eq("product_id", productId);
-  const relatedIds = form.getAll("related_product").map(String).filter((value) => value && value !== productId).slice(0, 3);
-  if (relatedIds.length) { const rel = await supabase.from("product_related_products").insert(relatedIds.map((related_product_id, sort_order) => ({ product_id: productId, related_product_id, sort_order }))); if (rel.error) throw new Error(rel.error.message); }
   if (colorText) {
     const { data: previous } = await supabase.from("product_colors").select("id,name").eq("product_id", productId);
     for (const [sort_order, colorName] of colors.entries()) {
@@ -67,9 +63,6 @@ export async function saveProduct(_previous: ProductFormState, form: FormData): 
     const retained = colors.map((colorName) => colorName.toLowerCase());
     for (const color of previous ?? []) if (!retained.includes(color.name.toLowerCase())) await supabase.from("product_colors").update({ is_active: false }).eq("id", color.id);
   }
-  const photoColorName = String(form.get("photo_color_name") ?? "").trim();
-  let photoColorId: string | null = null;
-  if (photoColorName) { const { data } = await supabase.from("product_colors").select("id").eq("product_id", productId).eq("name", photoColorName).eq("is_active", true).maybeSingle(); photoColorId = data?.id ?? null; }
   const photoFiles = form.getAll("photos").filter((file): file is File => file instanceof File && file.size > 0);
   if (photoFiles.reduce((sum, file) => sum + file.size, 0) > 45 * 1024 * 1024) throw new Error("Total ukuran foto dalam satu kali unggah maksimal 45 MB.");
   for (const file of photoFiles) {
@@ -77,7 +70,7 @@ export async function saveProduct(_previous: ProductFormState, form: FormData): 
     const path = `${productId}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "-")}`;
     const upload = await supabase.storage.from("product-photos").upload(path, file, { contentType: file.type, upsert: false });
     if (upload.error) throw new Error(upload.error.message);
-    const image = await supabase.from("product_images").insert({ product_id: productId, product_color_id: photoColorId, storage_path: path, alt_text: name });
+    const image = await supabase.from("product_images").insert({ product_id: productId, product_color_id: null, storage_path: path, alt_text: name });
     if (image.error) throw new Error(image.error.message);
   }
   revalidatePath("/"); revalidatePath("/catalog"); revalidatePath(`/products/${slug}`); revalidatePath("/admin/products"); redirect("/admin/products");
@@ -86,6 +79,11 @@ export async function deactivateProduct(form: FormData) {
   const { supabase } = await requireAdmin(); const id = String(form.get("id") ?? "");
   const { error } = await supabase.from("products").update({ is_active: false }).eq("id", id);
   if (error) throw new Error(error.message); revalidatePath("/"); revalidatePath("/catalog"); revalidatePath("/admin/products");
+}
+export async function reactivateProduct(form: FormData) {
+  const { supabase } = await requireAdmin(); const id = String(form.get("id") ?? "");
+  const { error } = await supabase.from("products").update({ is_active: true }).eq("id", id);
+  if (error) throw new Error(error.message); revalidatePath("/"); revalidatePath("/catalog"); revalidatePath("/admin/products"); revalidatePath("/admin/products/inactive");
 }
 export async function createManualOrder(form: FormData) {
   const { supabase } = await requireAdmin();
@@ -109,19 +107,14 @@ export async function saveSettings(_previous: SiteDisplayActionState, form: Form
   const { supabase } = await requireAdmin(); const enteredPhone = String(form.get("whatsapp_number") ?? "").replace(/[^\d]/g, "");
   const phone = enteredPhone.startsWith("0") ? `62${enteredPhone.slice(1)}` : enteredPhone;
   const fee = parseRequiredInteger(form.get("personalization_fee"));
-  const messageTemplate = String(form.get("whatsapp_template") ?? "");
   const storeName = String(form.get("store_name") ?? "").trim();
-  const tagline = String(form.get("brand_tagline") ?? "").trim();
-  const description = String(form.get("brand_description") ?? "").trim();
   const errors: Record<string, string> = {};
   if (!/^62\d{8,13}$/.test(phone)) errors.whatsapp_number = "Masukkan nomor WhatsApp Indonesia yang valid.";
   if (fee === null) errors.personalization_fee = "Biaya harus berupa angka Rupiah bulat nol atau lebih.";
   if (!storeName || storeName.length > 80) errors.store_name = "Nama toko wajib diisi dan maksimal 80 karakter.";
-  if (!tagline || tagline.length > 160) errors.brand_tagline = "Tagline wajib diisi dan maksimal 160 karakter.";
-  if (!description || description.length > 1000) errors.brand_description = "Tentang toko wajib diisi dan maksimal 1.000 karakter.";
-  if ([storeName, tagline, description, messageTemplate].some(hasPhoneLikeNumber)) errors.brand_description = "Nomor telepon tidak boleh tampil sebagai teks pada halaman customer.";
+  if (hasPhoneLikeNumber(storeName)) errors.store_name = "Nomor telepon tidak boleh tampil sebagai nama toko.";
   if (Object.keys(errors).length || fee === null) return { errors };
-  const { error } = await supabase.from("site_settings").update({ store_name: storeName, brand_tagline: tagline, brand_description: description, whatsapp_number: phone, personalization_fee: fee, whatsapp_template: messageTemplate, instagram_url: String(form.get("instagram_url") ?? "") || null, updated_at: new Date().toISOString() }).eq("id", true);
+  const { error } = await supabase.from("site_settings").update({ store_name: storeName, whatsapp_number: phone, personalization_fee: fee, updated_at: new Date().toISOString() }).eq("id", true);
   if (error) return { errors: {}, formError: "Pengaturan gagal disimpan. Periksa koneksi, lalu coba lagi." };
   revalidatePath("/"); revalidatePath("/catalog"); revalidatePath("/cart"); revalidatePath("/products/[slug]", "page"); revalidatePath("/admin/settings"); revalidatePath("/admin/site");
   return { errors: {}, success: "Pengaturan berhasil disimpan." };

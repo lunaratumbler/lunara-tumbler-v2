@@ -2,18 +2,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/customer/product-card";
 import type { Product } from "@/data/products";
+import { LatestProductCarousel } from "@/components/customer/latest-product-carousel";
 import { getPublicProducts, getStoreSettings } from "@/lib/store";
 
 export default async function Home() {
   const [products, settings] = await Promise.all([getPublicProducts(), getStoreSettings()]);
-  const featured = byOrder(products.filter((product) => product.featured), (product) => product.featuredOrder);
-  const newest = byOrder(products.filter((product) => product.isNew), (product) => product.newestOrder);
-  const bestSellers = byOrder(products.filter((product) => product.isBestSeller), (product) => product.bestSellerOrder);
   const bannerImage = settings.banners[0];
 
   return <main>
     <section className="home-banner page-width" aria-labelledby="home-title">
-      {bannerImage && <Image className="home-banner-image" src={bannerImage.image_path} alt="" width={1440} height={520} priority sizes="(max-width: 760px) calc(100vw - 32px), 1240px"/>}
+      {bannerImage && <Image className="home-banner-image" src={bannerImage.image_path} alt={bannerImage.alt_text || "Banner Lunara Tumbler"} width={1440} height={520} priority sizes="(max-width: 760px) calc(100vw - 32px), 1240px"/>}
       <div className="home-banner-shade" aria-hidden="true" />
       <div className="home-banner-copy">
         <p className="eyebrow">Lunara Tumbler</p>
@@ -24,10 +22,8 @@ export default async function Home() {
       </div>
     </section>
 
-    <ProductSection id="pilihan" storeName={settings.store_name} eyebrow="PILIHAN LUNARA" title="Produk Unggulan" description="Pilihan Lunara untuk menemani keseharian." items={featured}/>
-    <ProductSection id="terbaru" storeName={settings.store_name} eyebrow="BARU HADIR" title="Produk Terbaru" description={`Kenali pilihan terbaru dari ${settings.store_name}.`} items={newest}/>
-    <ProductSection id="favorit" storeName={settings.store_name} eyebrow="BANYAK DIPILIH" title="Produk Terlaris" description={`Pilihan favorit yang ditandai oleh ${settings.store_name}.`} items={bestSellers}/>
-    <section className="intro-strip page-width" id="tentang"><p className="eyebrow">TENTANG {settings.store_name.toLocaleUpperCase("id-ID")}</p><h2>{settings.brand_tagline}</h2><p>{settings.brand_description}</p></section>
+    <LatestProductCarousel products={products} personalizationFee={settings.personalization_fee}/>
+    <section className="intro-strip page-width" id="tentang"><p className="eyebrow">TENTANG {settings.store_name.toLocaleUpperCase("id-ID")}</p><h2>Semua yang kamu perlukan untuk memilih tumbler dengan nyaman.</h2><p>Lihat katalog, pilih warna, tambahkan nama untuk hadiah spesial, lalu pesan langsung melalui WhatsApp.</p></section>
   </main>;
 }
 

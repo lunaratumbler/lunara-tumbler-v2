@@ -1,12 +1,11 @@
-import { BannerForm, BrandInfoForm, ProductDisplayForm, type DisplayProduct, type SiteBanner } from "@/components/admin/site-display-forms";
+import { BannerForm, BrandInfoForm, type SiteBanner } from "@/components/admin/site-display-forms";
 import { requireAdmin } from "@/lib/admin";
 
 export default async function SitePage() {
   const { supabase } = await requireAdmin();
-  const [{ data: settings, error: settingsError }, { data: banners, error: bannersError }, { data: products, error: productsError }] = await Promise.all([
+  const [{ data: settings, error: settingsError }, { data: banners, error: bannersError }] = await Promise.all([
     supabase.from("site_settings").select("store_name,brand_tagline,brand_description").eq("id", true).maybeSingle(),
     supabase.from("banners").select("id,title,subtitle,alt_text,image_path,button_label,link_url,sort_order,is_active").order("sort_order").order("created_at"),
-    supabase.from("products").select("id,name,is_featured,featured_order,is_new,newest_order,is_best_seller,best_seller_order").eq("is_active", true).order("name"),
   ]);
   const publicBase = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
@@ -35,13 +34,6 @@ export default async function SitePage() {
         {bannersError && <p role="alert">Daftar banner gagal dimuat: {bannersError.message}</p>}
         {!bannersError && !banners?.length && <p>Belum ada banner. Tambahkan banner untuk ditampilkan di beranda.</p>}
       </div>
-    </section>
-
-    <section className="admin-panel">
-      <h2>Produk pilihan</h2>
-      <p>Pilih produk unggulan, terbaru, atau terlaris. Urutan lebih kecil tampil lebih dahulu pada beranda dan katalog.</p>
-      {productsError && <p role="alert">Daftar produk gagal dimuat: {productsError.message}</p>}
-      {!productsError && products?.length ? <div className="site-product-list">{(products as DisplayProduct[]).map((product) => <article className="site-product-row" key={product.id}><h3>{product.name}</h3><ProductDisplayForm product={product}/></article>)}</div> : !productsError ? <p>Belum ada produk aktif untuk dipilih.</p> : null}
     </section>
   </>;
 }

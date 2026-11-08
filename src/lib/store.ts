@@ -1,7 +1,7 @@
 import type { Product, ProductColor } from "@/data/products";
 import { createClient } from "@/lib/supabase/server";
 
-type ProductRow = { id: string; slug: string; name: string; description: string; selling_price: number; specifications: Record<string, string> | null; is_featured: boolean; is_new: boolean; is_best_seller: boolean; featured_order: number; newest_order: number; best_seller_order: number; product_colors: { id: string; name: string; hex_code: string; product_images: { storage_path: string; sort_order: number }[] }[]; product_images: { storage_path: string; sort_order: number }[]; related_products?: ProductRow[] };
+type ProductRow = { id: string; slug: string; name: string; description: string; selling_price: number; created_at?: string; specifications: Record<string, string> | null; is_featured: boolean; is_new: boolean; is_best_seller: boolean; featured_order: number; newest_order: number; best_seller_order: number; product_colors: { id: string; name: string; hex_code: string; product_images: { storage_path: string; sort_order: number }[] }[]; product_images: { storage_path: string; sort_order: number }[]; related_products?: ProductRow[] };
 export type StoreSettings = { store_name: string; brand_tagline: string; whatsapp_number: string; whatsapp_template: string; personalization_fee: number; brand_description: string; instagram_url: string | null; banners: { title: string; subtitle: string; alt_text: string; image_path: string; button_label: string; link_url: string | null }[] };
 
 export async function getPublicProducts(): Promise<Product[]> {
@@ -35,7 +35,7 @@ function mapProduct(row: ProductRow): Product {
   }));
   const gallery = (row.product_images ?? []).map((image) => publicImage(image.storage_path));
   return {
-    id: row.id, slug: row.slug, name: row.name, price: row.selling_price, description: row.description,
+    id: row.id, slug: row.slug, name: row.name, price: row.selling_price, description: row.description, createdAt: row.created_at ?? "",
     capacity: row.specifications?.capacity ?? "", material: row.specifications?.material ?? "",
     dimensions: row.specifications?.dimensions ?? "", featured: row.is_featured,
     featuredOrder: row.featured_order ?? 0, isNew: row.is_new, newestOrder: row.newest_order ?? 0,
