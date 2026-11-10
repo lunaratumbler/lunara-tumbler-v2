@@ -1,10 +1,10 @@
 # Progress — Lunara Tumbler
 
 ## Status terkini
-- **Milestone:** 3 — Supabase + Admin, dengan polish Customer UI
-- **Status:** Implementasi lokal lulus lint/typecheck/build dan menunggu review serta uji integrasi Supabase. Tidak ada perubahan Supabase remote, commit, push, atau deployment.
-- **Tanggal:** 2026-11-07
-- **Batas lingkup:** Tugas polish Customer UI, pemasaran, dan Milestone 3 yang disetujui owner; berhenti setelah laporan dan menunggu review.
+- **Tahap roadmap:** 7 — Pengelolaan Website (implementasi lokal), dengan penyempurnaan UI customer yang belum di-commit.
+- **Status:** Lint, typecheck, dan build lokal lulus pada 2026-11-11. Integrasi Supabase end-to-end, QA produksi, dan deployment Netlify belum diverifikasi pada audit ini. Tidak ada perubahan Supabase remote, commit, push, atau deployment.
+- **Batas lingkup saat ini:** Menunggu review owner. Jangan memulai pekerjaan milestone baru atau deploy tanpa persetujuan eksplisit.
+- **Catatan penomoran:** Judul historis “Milestone 5 — Site Display” di bawah mengacu pada paket kerja sesi lama. Untuk pelaporan status, gunakan nomor dalam `docs/ROADMAP.md`: Site Display adalah Milestone 7; Pesanan Admin adalah Milestone 5; Laporan adalah Milestone 6.
 
 ## Locked Decisions - Owner Approved
 1. Hanya satu akun admin aktif yang digunakan saat ini. Skema profil mengizinkan admin tambahan nanti; tidak ada role staf bertingkat.
@@ -158,3 +158,13 @@
 - Belum diverifikasi live: perubahan di Admin > Tampilan Website yang memerlukan sesi admin; penyimpanan produk uji dengan warna `Dusty Pink` nama saja dan pembersihan katalog setelahnya. Kedua pemeriksaan memerlukan migration diterapkan dan sesi owner. Jangan meminta password, key, atau UUID owner. Produk mengikuti kebijakan arsip melalui nonaktifkan, bukan hard-delete.
 - Aturan tetap: login Supabase melalui GitHub; Netlify melalui GitHub; GitHub terhubung ke proyek ini. Warna produk adalah NAMA SAJA, tanpa input hex. Nomor telepon tidak boleh tampil sebagai teks customer; kontak hanya lewat tombol `Hubungi via WhatsApp` yang menaut ke wa.me.
 - Keputusan owner: PAUSE proyek di sini. Jangan deploy. Jangan mulai Milestone 6. Tunggu owner mengatakan `lanjut` sebelum melanjutkan pekerjaan.
+
+## Checkpoint terakhir — polish UI customer dan dokumentasi (2026-11-11)
+- Owner menyetujui commit, push, dan deploy perubahan lokal ini. Checkpoint ini menggantikan instruksi PAUSE di atas untuk rilis perubahan yang tercatat di bagian ini saja; tidak mengizinkan pekerjaan milestone baru.
+- Katalog memakai copy pengantar customer yang tetap dan tidak lagi bergantung pada tagline Settings. Gambar kartu produk memakai `object-fit: contain` agar produk tidak terpotong.
+- Modal produk terbaru dan halaman detail kini memakai komponen bersama `ProductDescription`, sehingga deskripsi multi-baris atau berpoin tampil konsisten sebagai daftar yang mudah dibaca.
+- Pilihan nama warna dapat digeser horizontal di layar sempit; ukuran judul detail, footer, dan jarak section disesuaikan agar lebih aman pada mobile.
+- Tombol WhatsApp mengambang dihapus. Kontak WhatsApp tetap tersedia melalui footer dan tombol detail produk; tidak ada nomor telepon sebagai teks pada halaman customer.
+- Panduan `SETUP-OWNER.md` kini mencantumkan tiga migration yang wajib dijalankan berurutan untuk project baru: Milestone 3, Site Display, lalu Latest Products. Tidak ada migration remote yang dijalankan pada checkpoint ini.
+- Status roadmap dan penomoran paket kerja historis dirapikan di bagian Status terkini agar Site Display dilaporkan sebagai Milestone 7 sesuai `docs/ROADMAP.md`.
+- Verifikasi lokal pada checkpoint ini: `git diff --check`, `npm run lint`, `npm run typecheck`, dan `npm run build` semuanya exit 0. Integrasi admin terautentikasi, operasi tulis Supabase, serta hasil deploy Netlify harus diverifikasi setelah rilis.

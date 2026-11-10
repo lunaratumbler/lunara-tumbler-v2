@@ -17,7 +17,7 @@ export default async function CatalogPage() {
   const orderedCatalog = [...new Map([...priorityProducts, ...products].map((product) => [product.id, product])).values()];
 
   return <main className="page-width catalog-page">
-    <div className="page-intro"><p className="eyebrow">{settings.store_name.toLocaleUpperCase("id-ID")}</p><h1>Katalog</h1><p>{settings.brand_tagline}</p><p>Produk pilihan, koleksi terbaru, dan produk terlaris ditampilkan sesuai urutan pilihan {settings.store_name}.</p></div>
+    <div className="page-intro"><p className="eyebrow">LUNARA TUMBLER</p><h1>Katalog</h1><p>Pilih tumbler sesuai warna dan kebutuhan kamu. Tambahkan nama untuk hadiah yang lebih personal, lalu pesan langsung lewat WhatsApp.</p></div>
     {orderedCatalog.length ? <div className="catalog-grid">{orderedCatalog.map((product) => <ProductCard product={product} storeName={settings.store_name} key={product.id}/>)}</div> : <section className="empty-cart catalog-empty-state"><span className="empty-cart-icon" aria-hidden="true">♡</span><h2>Koleksi sedang disiapkan</h2><p>Pilihan {settings.store_name} akan segera hadir di sini.</p></section>}
   </main>;
 }
