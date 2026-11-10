@@ -178,3 +178,4 @@
 - Ikon gear di header customer diganti tombol menu hamburger. Navigasi desktop dan mobile tetap terpisah; menu mobile tampil di alur dokumen di bawah header agar tidak menimpa judul halaman.
 - Tidak ada perubahan Supabase, admin, HPP, nomor WhatsApp, data produk, atau file foto.
 - Verifikasi: `npm run lint`, `npm run typecheck`, dan `npm run build` exit 0. Uji browser manual pada 320, 375, dan 430 CSS px belum dijalankan pada checkpoint ini dan wajib dilakukan sebelum rilis.
+- Rilis: commit `6714fac` (`revise catalog layout and customer copy`) telah dipush ke `origin/main` untuk memicu Netlify. Endpoint `https://yayuhtm.netlify.app/catalog` merespons HTTP 200 setelah push. Konfirmasi visual manual pada 320, 375, dan 430 CSS px masih diperlukan.
