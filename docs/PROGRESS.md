@@ -167,4 +167,5 @@
 - Tombol WhatsApp mengambang dihapus. Kontak WhatsApp tetap tersedia melalui footer dan tombol detail produk; tidak ada nomor telepon sebagai teks pada halaman customer.
 - Panduan `SETUP-OWNER.md` kini mencantumkan tiga migration yang wajib dijalankan berurutan untuk project baru: Milestone 3, Site Display, lalu Latest Products. Tidak ada migration remote yang dijalankan pada checkpoint ini.
 - Status roadmap dan penomoran paket kerja historis dirapikan di bagian Status terkini agar Site Display dilaporkan sebagai Milestone 7 sesuai `docs/ROADMAP.md`.
-- Verifikasi lokal pada checkpoint ini: `git diff --check`, `npm run lint`, `npm run typecheck`, dan `npm run build` semuanya exit 0. Integrasi admin terautentikasi, operasi tulis Supabase, serta hasil deploy Netlify harus diverifikasi setelah rilis.
+- Verifikasi lokal pada checkpoint ini: `git diff --check`, `npm run lint`, `npm run typecheck`, dan `npm run build` semuanya exit 0. Integrasi admin terautentikasi dan operasi tulis Supabase masih perlu diverifikasi.
+- Rilis: commit UI `cd394c7` telah dipush ke `origin/main`. Netlify live `https://yayuhtm.netlify.app/catalog` merespons HTTP 200 dan menampilkan copy katalog baru pada 2026-11-11; deployment perubahan UI terverifikasi aktif.
