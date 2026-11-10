@@ -169,3 +169,12 @@
 - Status roadmap dan penomoran paket kerja historis dirapikan di bagian Status terkini agar Site Display dilaporkan sebagai Milestone 7 sesuai `docs/ROADMAP.md`.
 - Verifikasi lokal pada checkpoint ini: `git diff --check`, `npm run lint`, `npm run typecheck`, dan `npm run build` semuanya exit 0. Integrasi admin terautentikasi dan operasi tulis Supabase masih perlu diverifikasi.
 - Rilis: commit UI `cd394c7` telah dipush ke `origin/main`. Netlify live `https://yayuhtm.netlify.app/catalog` merespons HTTP 200 dan menampilkan copy katalog baru pada 2026-11-11; deployment perubahan UI terverifikasi aktif.
+
+## Checkpoint terakhir — revisi visual katalog dan copy customer (2026-11-11)
+- Belum di-commit, push, atau deploy. Berhenti untuk menunggu review owner.
+- Katalog dan Produk Terbaru kini memakai kartu compact yang sama. Grid ditetapkan 2 kolom pada lebar mobile, 3 kolom tablet (761–1023 px), dan 4 kolom desktop. Foto kartu memakai rasio 4:5 dengan `object-fit: contain` agar produk tidak terpotong; nama dibatasi dua baris, harga dan jumlah pilihan warna tampil ringkas.
+- Carousel Produk Terbaru yang berukuran besar diganti grid produk. Saat tidak ada produk, section tidak merender placeholder kosong.
+- Copy beranda, katalog, dan footer disederhanakan menjadi bahasa toko yang singkat. Header katalog menjelaskan biaya personalisasi dari Settings tanpa mengubah nilainya.
+- Ikon gear di header customer diganti tombol menu hamburger. Navigasi desktop dan mobile tetap terpisah; menu mobile tampil di alur dokumen di bawah header agar tidak menimpa judul halaman.
+- Tidak ada perubahan Supabase, admin, HPP, nomor WhatsApp, data produk, atau file foto.
+- Verifikasi: `npm run lint`, `npm run typecheck`, dan `npm run build` exit 0. Uji browser manual pada 320, 375, dan 430 CSS px belum dijalankan pada checkpoint ini dan wajib dilakukan sebelum rilis.

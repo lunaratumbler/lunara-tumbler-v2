@@ -410,3 +410,36 @@ main > .intro-strip:last-child { margin-bottom: clamp(3rem, 8vw, 6rem); }
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal { opacity: 1; transform: none; }
 }
+
+/* Compact catalog cards: readable product information without billboard-sized cards. */
+.catalog-grid, .product-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(.7rem, 1.6vw, 1.15rem); }
+.product-card { border-radius: 14px; }
+.product-art-wrap { aspect-ratio: 4 / 5; }
+.product-card-copy { display: grid; gap: .35rem; padding: .72rem; }
+.product-card-copy h3 { display: -webkit-box; margin: 0; overflow: hidden; font-family: var(--font-body); font-size: .86rem; font-weight: 700; line-height: 1.35; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.product-price { padding: 0; color: var(--lunara-charcoal); font-size: .84rem; }
+.product-card-bottom { margin-top: .12rem; padding-top: .45rem; }
+.color-names { overflow: visible; color: var(--lunara-muted); font-size: .68rem; white-space: normal; }
+.latest-products { padding-block: clamp(2.2rem, 5vw, 4rem); }
+.menu-toggle { display: grid; place-content: center; gap: 4px; padding: 0; }
+.menu-toggle span { width: 18px; height: 2px; margin: 0; border-radius: 2px; background: var(--lunara-charcoal); }
+
+@media (min-width: 761px) and (max-width: 1023px) {
+  .catalog-grid, .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  .catalog-page { padding-block: 1.5rem 3.2rem; }
+  .page-intro { margin-bottom: 1.4rem; text-align: left; }
+  .page-intro h1 { font-size: 2rem; }
+  .page-intro > p:not(.eyebrow) { margin: .45rem 0 0; font-size: .8rem; }
+  .catalog-grid, .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+  .product-card-copy { padding: .62rem; }
+  .product-card-copy h3 { font-size: .78rem; }
+  .product-price { font-size: .78rem; }
+  .color-names { font-size: .62rem; }
+  .latest-products { padding-block: 2rem; }
+  .latest-products .section-heading { margin-bottom: 1rem; }
+  .mobile-nav:not([hidden]) { grid-template-columns: repeat(3, minmax(0, 1fr)); padding: .35rem 0 .7rem; border-top: 1px solid rgb(155 98 95 / 12%); }
+  .mobile-nav a { justify-content: center; font-size: .72rem; }
+}
